@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class SettingsWidget extends StatefulWidget {
@@ -9,6 +10,52 @@ class SettingsWidget extends StatefulWidget {
   State<SettingsWidget> createState() => _SettingsWidgetState();
 }
 
+class VisibilityCheckBox extends StatefulWidget {
+  final String chartTitle;
+
+  const VisibilityCheckBox({Key? key, required this.chartTitle}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _StatefulWidgetState();
+}
+
+class _StatefulWidgetState extends State<VisibilityCheckBox> {
+  bool value = false;
+
+  Future<bool> currentState() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(widget.chartTitle) ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        initialData: value,
+        future: currentState(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return CheckboxListTile(
+              title: Text(widget.chartTitle),
+              value: snapshot.data as bool? ?? false,
+              onChanged: (state) async {
+                final prefs = await SharedPreferences.getInstance();
+                prefs.setBool(widget.chartTitle, state ?? false);
+
+                setState(() {
+                  value = state ?? false;
+                });
+              }
+            );
+          }
+        }
+    );
+  }
+}
+
 class _SettingsWidgetState extends State<SettingsWidget> {
   @override
   Widget build(BuildContext context) {
@@ -17,8 +64,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         title: Text("Settings: ${widget.title}"),
       ),
       body: ListView(
-        children: [
-
+        children: const [
+          VisibilityCheckBox(chartTitle: 'temperature')
         ],
       ),
     );
