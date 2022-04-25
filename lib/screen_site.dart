@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cg_proto/data_chart.dart';
 import 'package:cg_proto/screen_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class SiteWidget extends StatefulWidget {
@@ -58,24 +59,44 @@ class ChartBox extends StatelessWidget {
 
   const ChartBox({Key? key, required this.title, required this.data}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(12.0),
-      child: Column(
-        children: [
-          Text(title),
-          SizedBox(
-            height: 100.0,
-            child: DataChart(
-              data: data
-            ),
-          ),
-        ],
-      ),
-    );
+  Future<bool> currentState() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(title.toLowerCase()) ?? true;
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: currentState(),
+      initialData: false,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          bool showing = snapshot.data as bool? ?? false;
+          return Visibility(
+            visible: showing,
+            child: Container(
+              margin: const EdgeInsets.all(12.0),
+              child: Column(
+                children: [
+                  Text(title),
+                  SizedBox(
+                    height: 100.0,
+                    child: DataChart(
+                      data: data
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
 }
 
 class _SiteWidgetState extends State<SiteWidget> {
@@ -95,7 +116,9 @@ class _SiteWidgetState extends State<SiteWidget> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SettingsWidget(title: widget.title)),
-              );
+              ).then((_) {
+                setState(() {});
+              });
             },
             icon: const Icon(Icons.settings)
           )

@@ -24,7 +24,7 @@ class _StatefulWidgetState extends State<VisibilityCheckBox> {
 
   Future<bool> currentState() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(widget.chartTitle) ?? false;
+    return prefs.getBool(widget.chartTitle.toLowerCase()) ?? true;
   }
 
   @override
@@ -43,7 +43,7 @@ class _StatefulWidgetState extends State<VisibilityCheckBox> {
               value: snapshot.data as bool? ?? false,
               onChanged: (state) async {
                 final prefs = await SharedPreferences.getInstance();
-                prefs.setBool(widget.chartTitle, state ?? false);
+                prefs.setBool(widget.chartTitle.toLowerCase(), state ?? false);
 
                 setState(() {
                   value = state ?? false;
@@ -65,7 +65,11 @@ class _SettingsWidgetState extends State<SettingsWidget> {
       ),
       body: ListView(
         children: const [
-          VisibilityCheckBox(chartTitle: 'temperature')
+          VisibilityCheckBox(chartTitle: 'Temperature'),
+          VisibilityCheckBox(chartTitle: 'Moisture'),
+          VisibilityCheckBox(chartTitle: 'Wind Speed'),
+          VisibilityCheckBox(chartTitle: 'Humidity'),
+          VisibilityCheckBox(chartTitle: 'Etc...'),
         ],
       ),
     );
