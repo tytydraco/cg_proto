@@ -12,19 +12,20 @@ class SettingsWidget extends StatefulWidget {
 
 class VisibilityCheckBox extends StatefulWidget {
   final String chartTitle;
+  final String prefKey;
 
-  const VisibilityCheckBox({Key? key, required this.chartTitle}) : super(key: key);
+  const VisibilityCheckBox({Key? key, required this.chartTitle, required this.prefKey}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _StatefulWidgetState();
+  State<StatefulWidget> createState() => _VisibilityCheckBoxState();
 }
 
-class _StatefulWidgetState extends State<VisibilityCheckBox> {
+class _VisibilityCheckBoxState extends State<VisibilityCheckBox> {
   bool value = false;
 
   Future<bool> currentState() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(widget.chartTitle.toLowerCase()) ?? true;
+    return prefs.getBool(widget.prefKey) ?? true;
   }
 
   @override
@@ -43,7 +44,7 @@ class _StatefulWidgetState extends State<VisibilityCheckBox> {
               value: snapshot.data as bool? ?? false,
               onChanged: (state) async {
                 final prefs = await SharedPreferences.getInstance();
-                prefs.setBool(widget.chartTitle.toLowerCase(), state ?? false);
+                prefs.setBool(widget.prefKey, state ?? false);
 
                 setState(() {
                   value = state ?? false;
@@ -64,12 +65,12 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         title: Text("Settings: ${widget.title}"),
       ),
       body: ListView(
-        children: const [
-          VisibilityCheckBox(chartTitle: 'Temperature'),
-          VisibilityCheckBox(chartTitle: 'Moisture'),
-          VisibilityCheckBox(chartTitle: 'Wind Speed'),
-          VisibilityCheckBox(chartTitle: 'Humidity'),
-          VisibilityCheckBox(chartTitle: 'Etc...'),
+        children: [
+          VisibilityCheckBox(chartTitle: 'Temperature', prefKey: "${widget.title}_temperature"),
+          VisibilityCheckBox(chartTitle: 'Moisture', prefKey: "${widget.title}_moisture"),
+          VisibilityCheckBox(chartTitle: 'Wind Speed', prefKey: "${widget.title}_wind_speed"),
+          VisibilityCheckBox(chartTitle: 'Humidity', prefKey: "${widget.title}_humidity"),
+          VisibilityCheckBox(chartTitle: 'Etc...', prefKey: "${widget.title}_etc"),
         ],
       ),
     );

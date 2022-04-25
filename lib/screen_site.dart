@@ -56,12 +56,13 @@ class DataBox extends StatelessWidget {
 class ChartBox extends StatelessWidget {
   final String title;
   final List<int> data;
+  final String prefKey;
 
-  const ChartBox({Key? key, required this.title, required this.data}) : super(key: key);
+  const ChartBox({Key? key, required this.title, required this.data, required this.prefKey}) : super(key: key);
 
   Future<bool> currentState() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(title.toLowerCase()) ?? true;
+    return prefs.getBool(prefKey) ?? true;
   }
 
   @override
@@ -135,11 +136,11 @@ class _SiteWidgetState extends State<SiteWidget> {
             ],
             mainAxisAlignment: MainAxisAlignment.center,
           ),
-          ChartBox(title: 'Temperature', data: randomData(7)),
-          ChartBox(title: 'Moisture', data: randomData(7)),
-          ChartBox(title: 'Wind Speed', data: randomData(7)),
-          ChartBox(title: 'Humidity', data: randomData(7)),
-          ChartBox(title: 'Etc...', data: randomData(7)),
+          ChartBox(title: 'Temperature', data: randomData(7), prefKey: "${widget.title}_temperature"),
+          ChartBox(title: 'Moisture', data: randomData(7), prefKey: "${widget.title}_moisture"),
+          ChartBox(title: 'Wind Speed', data: randomData(7), prefKey: "${widget.title}_wind_speed"),
+          ChartBox(title: 'Humidity', data: randomData(7), prefKey: "${widget.title}_humidity"),
+          ChartBox(title: 'Etc...', data: randomData(7), prefKey: "${widget.title}_etc"),
         ],
       ),
     );
