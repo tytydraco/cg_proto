@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cg_proto/data_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -12,33 +14,48 @@ class SiteWidget extends StatefulWidget {
 
 class DataBox extends StatelessWidget {
   final String text;
+  final String label;
 
-  const DataBox({Key? key, required this.text}) : super(key: key);
+  const DataBox({Key? key, required this.text, required this.label}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48.0,
-      width: 48.0,
-      margin: const EdgeInsets.all(12.0),
-      child: Center(
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
+    return Column(
+      children: [
+        Container(
+          height: 48.0,
+          width: 48.0,
+          margin: const EdgeInsets.all(12.0),
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.0),
+              color: Colors.blue
+          ),
         ),
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50.0),
-        color: Colors.blue
-      ),
+        SizedBox(
+          width: 64.0,
+          child: Center(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        )
+      ]
     );
   }
 }
 
 class ChartBox extends StatelessWidget {
   final String title;
+  final List<int> data;
 
-  const ChartBox({Key? key, required this.title}) : super(key: key);
+  const ChartBox({Key? key, required this.title, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +64,10 @@ class ChartBox extends StatelessWidget {
       child: Column(
         children: [
           Text(title),
-          const SizedBox(
+          SizedBox(
             height: 100.0,
             child: DataChart(
-              data: [5, 1, 2, 3, 5, 3, 6, 8, 9]
+              data: data
             ),
           ),
         ],
@@ -61,6 +78,11 @@ class ChartBox extends StatelessWidget {
 }
 
 class _SiteWidgetState extends State<SiteWidget> {
+  List<int> randomData(int n) {
+    Random r = Random();
+    return List.generate(n, (index) => r.nextInt(11));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,18 +93,18 @@ class _SiteWidgetState extends State<SiteWidget> {
         children: [
           Row(
             children: const [
-              DataBox(text: 'T'),
-              DataBox(text: 'WS'),
-              DataBox(text: 'WD'),
-              DataBox(text: 'SM'),
+              DataBox(text: '45', label: 'Temperature'),
+              DataBox(text: '55', label: 'Wind Speed'),
+              DataBox(text: '78', label: 'Wind Direction'),
+              DataBox(text: '13', label: 'Soil Moisture'),
             ],
             mainAxisAlignment: MainAxisAlignment.center,
           ),
-          const ChartBox(title: 'Temperature'),
-          const ChartBox(title: 'Moisture'),
-          const ChartBox(title: 'Wind Speed'),
-          const ChartBox(title: 'Humidity'),
-          const ChartBox(title: 'Etc...'),
+          ChartBox(title: 'Temperature', data: randomData(7)),
+          ChartBox(title: 'Moisture', data: randomData(7)),
+          ChartBox(title: 'Wind Speed', data: randomData(7)),
+          ChartBox(title: 'Humidity', data: randomData(7)),
+          ChartBox(title: 'Etc...', data: randomData(7)),
         ],
       ),
     );
