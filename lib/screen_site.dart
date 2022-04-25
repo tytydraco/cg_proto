@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cg_proto/data_chart.dart';
+import 'package:cg_proto/screen_settings.dart';
 import 'package:flutter/material.dart';
 
 class SiteWidget extends StatefulWidget {
@@ -88,6 +89,17 @@ class _SiteWidgetState extends State<SiteWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsWidget(title: widget.title)),
+              );
+            },
+            icon: const Icon(Icons.settings)
+          )
+        ],
       ),
       body: ListView(
         children: [
