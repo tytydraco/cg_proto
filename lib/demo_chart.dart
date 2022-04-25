@@ -9,19 +9,16 @@ class DemoSeries {
 }
 
 class DemoChart extends StatelessWidget {
-  const DemoChart({Key? key}) : super(key: key);
+  final List<int> data;
+  
+  const DemoChart({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final List<DemoSeries> demoData = [
-      DemoSeries(0, 5),
-      DemoSeries(1, 4),
-      DemoSeries(2, 7),
-      DemoSeries(3, 3),
-      DemoSeries(4, 4),
-      DemoSeries(5, 2),
-      DemoSeries(6, 3),
-    ];
+    final List<DemoSeries> demoData = [];
+    data.asMap().forEach((key, value) {
+      demoData.add(DemoSeries(key, value));
+    });
 
     final List<charts.Series<DemoSeries, int>> series = [
       charts.Series(

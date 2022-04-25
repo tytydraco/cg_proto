@@ -49,7 +49,9 @@ class ChartBox extends StatelessWidget {
           Text(title),
           const SizedBox(
             height: 100.0,
-            child: DemoChart(),
+            child: DemoChart(
+              data: [5, 1, 2, 3, 5, 3, 6, 8, 9]
+            ),
           ),
         ],
       ),
