@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-class DemoSeries {
+class XYSeries {
   final int x;
   final int y;
 
-  DemoSeries(this.x, this.y);
+  XYSeries(this.x, this.y);
 }
 
-class DemoChart extends StatelessWidget {
+class DataChart extends StatelessWidget {
   final List<int> data;
   
-  const DemoChart({Key? key, required this.data}) : super(key: key);
+  const DataChart({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final List<DemoSeries> demoData = [];
+    final List<XYSeries> demoData = [];
     data.asMap().forEach((key, value) {
-      demoData.add(DemoSeries(key, value));
+      demoData.add(XYSeries(key, value));
     });
 
-    final List<charts.Series<DemoSeries, int>> series = [
+    final List<charts.Series<XYSeries, int>> series = [
       charts.Series(
         id: 'DemoData',
         data: demoData,
-        domainFn: (DemoSeries series, _) => series.x,
-        measureFn: (DemoSeries series, _) => series.y,
+        domainFn: (XYSeries series, _) => series.x,
+        measureFn: (XYSeries series, _) => series.y,
       )
     ];
 
@@ -34,5 +34,4 @@ class DemoChart extends StatelessWidget {
       animate: false,
     );
   }
-
 }

@@ -1,4 +1,4 @@
-import 'package:cg_proto/demo_chart.dart';
+import 'package:cg_proto/data_chart.dart';
 import 'package:flutter/material.dart';
 
 class SiteWidget extends StatefulWidget {
@@ -49,7 +49,7 @@ class ChartBox extends StatelessWidget {
           Text(title),
           const SizedBox(
             height: 100.0,
-            child: DemoChart(
+            child: DataChart(
               data: [5, 1, 2, 3, 5, 3, 6, 8, 9]
             ),
           ),
