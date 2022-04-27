@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cg_proto/data_chart.dart';
+import 'package:cg_proto/screen_camera.dart';
 import 'package:cg_proto/screen_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -122,6 +123,15 @@ class _SiteWidgetState extends State<SiteWidget> {
               });
             },
             icon: const Icon(Icons.settings)
+          ),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CameraWidget(title: widget.title)),
+                );
+              },
+              icon: const Icon(Icons.camera_alt)
           )
         ],
       ),
