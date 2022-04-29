@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class Repo {
   static Future<List<String>> getSiteList() async {
     return [
@@ -13,5 +15,10 @@ class Repo {
       'Site J',
       'Site K',
     ];
+  }
+
+  static Future<List<int>> getSiteData(String site, String chart) async {
+    Random r = Random();
+    return List.generate(7, (index) => r.nextInt(11));
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cg_proto/data_chart.dart';
+import 'package:cg_proto/repo.dart';
 import 'package:cg_proto/screen_camera.dart';
 import 'package:cg_proto/screen_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,10 +57,9 @@ class DataBox extends StatelessWidget {
 
 class ChartBox extends StatelessWidget {
   final String title;
-  final List<int> data;
   final String prefKey;
 
-  const ChartBox({Key? key, required this.title, required this.data, required this.prefKey}) : super(key: key);
+  const ChartBox({Key? key, required this.title, required this.prefKey}) : super(key: key);
 
   Future<bool> currentState() async {
     final prefs = await SharedPreferences.getInstance();
@@ -87,8 +87,19 @@ class ChartBox extends StatelessWidget {
                   Text(title),
                   SizedBox(
                     height: 100.0,
-                    child: DataChart(
-                      data: data
+                    child: FutureBuilder(
+                      future: Repo.getSiteData("site", title),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return DataChart(
+                            data: snapshot.data as List<int>
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      }
                     ),
                   ),
                 ],
@@ -102,11 +113,6 @@ class ChartBox extends StatelessWidget {
 }
 
 class _SiteWidgetState extends State<SiteWidget> {
-  List<int> randomData(int n) {
-    Random r = Random();
-    return List.generate(n, (index) => r.nextInt(11));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,11 +152,11 @@ class _SiteWidgetState extends State<SiteWidget> {
             ],
             mainAxisAlignment: MainAxisAlignment.center,
           ),
-          ChartBox(title: 'Temperature', data: randomData(7), prefKey: "${widget.title}_temperature"),
-          ChartBox(title: 'Moisture', data: randomData(7), prefKey: "${widget.title}_moisture"),
-          ChartBox(title: 'Wind Speed', data: randomData(7), prefKey: "${widget.title}_wind_speed"),
-          ChartBox(title: 'Humidity', data: randomData(7), prefKey: "${widget.title}_humidity"),
-          ChartBox(title: 'Etc...', data: randomData(7), prefKey: "${widget.title}_etc"),
+          ChartBox(title: 'Temperature', prefKey: "${widget.title}_temperature"),
+          ChartBox(title: 'Moisture', prefKey: "${widget.title}_moisture"),
+          ChartBox(title: 'Wind Speed', prefKey: "${widget.title}_wind_speed"),
+          ChartBox(title: 'Humidity', prefKey: "${widget.title}_humidity"),
+          ChartBox(title: 'Etc...', prefKey: "${widget.title}_etc"),
         ],
       ),
     );

@@ -30,7 +30,6 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      initialData: [],
       future: Repo.getSiteList(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
