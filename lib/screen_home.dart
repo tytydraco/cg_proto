@@ -1,5 +1,5 @@
+import 'package:cg_proto/repo.dart';
 import 'package:cg_proto/screen_site.dart';
-import 'package:cg_proto/test_data.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -29,33 +29,47 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: ListView.builder(
-        itemCount: siteList.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            child: Container(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                siteList[index],
-                style: const TextStyle(
-                  fontSize: 18.0
-                ),
-              ),
-            ),
-            onTap: () {
-              // TODO: What happens when we click this site
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SiteWidget(title: siteList[index])),
-              );
-            },
+    return FutureBuilder(
+      initialData: [],
+      future: Repo.getSiteList(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
           );
-        },
-      ),
+        } else {
+          List<String> siteList = snapshot.data as List<String>;
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(widget.title),
+            ),
+            body: ListView.builder(
+              itemCount: siteList.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  child: Container(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      siteList[index],
+                      style: const TextStyle(
+                          fontSize: 18.0
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    // TODO: What happens when we click this site
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SiteWidget(title: siteList[index])),
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        }
+      },
     );
   }
 }
